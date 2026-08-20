@@ -62,6 +62,11 @@ const EnvSchema = z.object({
   // --- Safety -------------------------------------------------------------
   RATE_LIMIT_MAX: intInRange(20, 1, 10_000),
   RATE_LIMIT_WINDOW_MS: intInRange(60_000, 1_000, 3_600_000),
+  /**
+   * Only enable when a proxy you control overwrites X-Forwarded-For. Otherwise
+   * callers could forge the header and hand themselves a fresh rate-limit bucket.
+   */
+  TRUST_PROXY_HEADERS: boolFlag(false),
 
   // --- Storage ------------------------------------------------------------
   STORE_DRIVER: z.preprocess(

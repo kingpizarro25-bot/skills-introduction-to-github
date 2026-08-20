@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { validateWorkflowRequest } from "@/services/validation";
-import { checkRateLimit } from "@/services/rateLimit";
+import { checkRateLimit, clientKey } from "@/services/rateLimit";
 import { ALL_KEYS, setEnv } from "./helpers";
 
 const issuesOf = (result: ReturnType<typeof validateWorkflowRequest>) =>
@@ -144,6 +144,28 @@ describe("unconfigured providers are refused, not faked", () => {
   });
 });
 
+describe("review mode provider count", () => {
+  it("rejects extra providers instead of silently ignoring them", () => {
+    setEnv(ALL_KEYS);
+    expect(
+      issuesOf(
+        validateWorkflowRequest({
+          task: "x",
+          mode: "review",
+          providers: ["openai", "anthropic", "perplexity"],
+        }),
+      ),
+    ).toContain("exactly two providers");
+  });
+
+  it("still accepts exactly two", () => {
+    setEnv(ALL_KEYS);
+    expect(
+      validateWorkflowRequest({ task: "x", mode: "review", providers: ["openai", "anthropic"] }),
+    ).not.toHaveProperty("error");
+  });
+});
+
 describe("rate limiting", () => {
   it("allows up to the limit then blocks with a retry hint", () => {
     setEnv({ ...ALL_KEYS, RATE_LIMIT_MAX: "3", RATE_LIMIT_WINDOW_MS: "60000" });
@@ -155,6 +177,26 @@ describe("rate limiting", () => {
     expect(blocked.allowed).toBe(false);
     expect(blocked.remaining).toBe(0);
     expect(blocked.retryAfterSeconds).toBeGreaterThan(0);
+  });
+
+  it("ignores a forged X-Forwarded-For unless proxy headers are trusted", () => {
+    setEnv({ ...ALL_KEYS, RATE_LIMIT_MAX: "2" });
+
+    // An attacker rotating the header must NOT get a fresh bucket each time.
+    const keys = ["1.1.1.1", "2.2.2.2", "3.3.3.3"].map((ip) =>
+      clientKey(new Headers({ "x-forwarded-for": ip })),
+    );
+    expect(new Set(keys).size).toBe(1);
+
+    expect(checkRateLimit(keys[0]).allowed).toBe(true);
+    expect(checkRateLimit(keys[1]).allowed).toBe(true);
+    expect(checkRateLimit(keys[2]).allowed).toBe(false); // limit held across forged IPs
+  });
+
+  it("honours X-Forwarded-For when TRUST_PROXY_HEADERS is on", () => {
+    setEnv({ ...ALL_KEYS, TRUST_PROXY_HEADERS: "true" });
+    expect(clientKey(new Headers({ "x-forwarded-for": "9.9.9.9, 10.0.0.1" }))).toBe("9.9.9.9");
+    expect(clientKey(new Headers({ "x-real-ip": "8.8.8.8" }))).toBe("8.8.8.8");
   });
 
   it("tracks callers independently and resets after the window", () => {

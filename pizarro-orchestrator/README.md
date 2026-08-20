@@ -135,6 +135,7 @@ All of these live in `.env.local`:
 | `MAX_PROVIDER_CALLS_PER_RUN` | `8` | Hard ceiling on calls in one workflow |
 | `DISABLED_PROVIDERS` | *(empty)* | Comma-separated ids to switch off |
 | `RATE_LIMIT_MAX` / `RATE_LIMIT_WINDOW_MS` | `20` / `60000` | API rate limit |
+| `TRUST_PROXY_HEADERS` | `false` | Rate-limit per `X-Forwarded-For` (only behind a proxy you control) |
 
 `MAX_PROVIDER_CALLS_PER_RUN` is the stopping condition. Every workflow has a
 fixed, finite number of calls — there are no recursive agent loops, and no mode
@@ -306,13 +307,17 @@ spoke. If *no* provider answered, the judge is not called at all.
 - Secrets are redacted from logs by key name and by value pattern. Token
   *counts* are preserved, so telemetry stays useful.
 - Every request is validated with zod, with unknown fields rejected outright.
-- Fixed-window rate limiting on the API.
+- Fixed-window rate limiting on the API. `X-Forwarded-For` is ignored unless
+  `TRUST_PROXY_HEADERS=true`, since a caller can forge it to give itself an
+  unlimited number of fresh buckets; by default all callers share one bucket.
+- Citation URLs returned by a provider are rendered as links only if they are
+  plain `http(s)`, so a hostile provider cannot supply a `javascript:` link.
 - Errors returned to the client are sanitized — no stack traces, no internal URLs.
 - `.env*` files are git-ignored.
 
 For a multi-instance deployment, replace the in-memory limiter in
-`src/services/rateLimit.ts` with Redis, and add authentication — V1 assumes a
-trusted local operator.
+`src/services/rateLimit.ts` with Redis, set `TRUST_PROXY_HEADERS=true` behind a
+proxy you control, and add authentication — V1 assumes a trusted local operator.
 
 ---
 

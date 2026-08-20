@@ -46,8 +46,20 @@ export function checkRateLimit(key: string, now = Date.now()): RateLimitResult {
   };
 }
 
-/** Best-effort client identity. Falls back to a shared bucket behind proxies. */
+/**
+ * Client identity for rate limiting.
+ *
+ * `X-Forwarded-For` is set by the caller, so trusting it by default would make
+ * the limit meaningless: send a fresh value per request and every request gets
+ * its own bucket. So it is only honoured when TRUST_PROXY_HEADERS=true, which
+ * you set when the app genuinely sits behind a proxy that overwrites the header.
+ *
+ * Off (the default), every caller shares one bucket. That is the right shape for
+ * a single-operator deployment: the limit still caps total spend.
+ */
 export function clientKey(headers: Headers): string {
+  if (!getConfig().TRUST_PROXY_HEADERS) return "shared";
+
   const forwarded = headers.get("x-forwarded-for");
   if (forwarded) return forwarded.split(",")[0].trim();
   return headers.get("x-real-ip") ?? "unknown";

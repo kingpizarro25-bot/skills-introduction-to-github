@@ -10,7 +10,17 @@ import { MOCK_BANNER, MockProvider } from "@/providers/mock";
 import { describeProviders } from "@/providers/registry";
 import { orchestrate } from "@/orchestrator";
 import type { WorkflowRun } from "@/types/ai";
-import { ALL_KEYS, OPENAI_URL, chatBody, jsonResponse, mockFetch, setEnv } from "./helpers";
+import { PerplexityProvider } from "@/providers/perplexity";
+import {
+  ALL_KEYS,
+  OPENAI_URL,
+  PERPLEXITY_URL,
+  chatBody,
+  jsonResponse,
+  mockFetch,
+  setEnv,
+} from "./helpers";
+import { safeCitations } from "@/lib/citations";
 
 afterEach(() => vi.unstubAllGlobals());
 
@@ -163,6 +173,34 @@ describe("secret handling", () => {
     for (const key of Object.values(ALL_KEYS)) {
       expect(serialized).not.toContain(key);
     }
+  });
+});
+
+describe("untrusted provider output", () => {
+  it("drops non-http(s) citation URLs so a hostile provider cannot inject a javascript: link", async () => {
+    setEnv(ALL_KEYS);
+    mockFetch({
+      [PERPLEXITY_URL]: () =>
+        jsonResponse({
+          ...chatBody("grounded"),
+          citations: [
+            "https://example.com/ok",
+            "http://example.com/also-ok",
+            // eslint-disable-next-line no-script-url
+            "javascript:alert(document.cookie)",
+            "data:text/html;base64,PHNjcmlwdD4=",
+            "not a url at all",
+            42,
+          ],
+        }),
+    });
+
+    const result = await new PerplexityProvider().sendMessage("ping");
+    const rendered = safeCitations(result);
+
+    expect(rendered).toEqual(["https://example.com/ok", "http://example.com/also-ok"]);
+    expect(rendered.join(" ")).not.toContain("javascript:");
+    expect(rendered.join(" ")).not.toContain("data:");
   });
 });
 

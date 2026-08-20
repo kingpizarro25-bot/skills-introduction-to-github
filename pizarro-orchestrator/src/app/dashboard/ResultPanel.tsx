@@ -1,6 +1,7 @@
 "use client";
 
-import type { ProviderResult, WorkflowStep } from "@/types/ai";
+import type { WorkflowStep } from "@/types/ai";
+import { safeCitations } from "@/lib/citations";
 
 const STAGE_LABEL: Record<string, string> = {
   answer: "answer",
@@ -10,17 +11,11 @@ const STAGE_LABEL: Record<string, string> = {
   synthesis: "synthesis",
 };
 
-function citationsOf(result: ProviderResult): string[] {
-  if (!result.ok) return [];
-  const raw = (result.meta as { citations?: unknown } | undefined)?.citations;
-  return Array.isArray(raw) ? raw.filter((c): c is string => typeof c === "string") : [];
-}
-
 /** One provider call: who ran, which model, how long it took, and what came back. */
 export function ResultPanel({ step }: { step: WorkflowStep }) {
   const { result, stage } = step;
   const stageLabel = STAGE_LABEL[stage] ?? stage;
-  const citations = citationsOf(result);
+  const citations = safeCitations(result);
 
   return (
     <div className="result">

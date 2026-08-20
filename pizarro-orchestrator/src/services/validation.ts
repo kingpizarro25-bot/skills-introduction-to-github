@@ -79,6 +79,11 @@ export function validateWorkflowRequest(
     case "review": {
       const author = request.author ?? dedupedProviders[0];
       const reviewer = request.reviewer ?? dedupedProviders[1];
+      if (dedupedProviders.length > 2) {
+        // Reject rather than quietly dropping the extras — a silently ignored
+        // provider looks like a bug in the run history.
+        issues.push("providers: review mode takes exactly two providers (author, then reviewer)");
+      }
       if (!author || !reviewer) {
         issues.push("providers: review mode needs two providers (author, then reviewer)");
       } else if (author === reviewer) {
