@@ -8,6 +8,7 @@ const MANAGED = [
   "OPENAI_API_KEY", "OPENAI_MODEL", "OPENAI_BASE_URL",
   "ANTHROPIC_API_KEY", "ANTHROPIC_MODEL", "ANTHROPIC_BASE_URL",
   "PERPLEXITY_API_KEY", "PERPLEXITY_MODEL", "PERPLEXITY_BASE_URL",
+  "GEMINI_API_KEY", "GEMINI_MODEL", "GEMINI_BASE_URL",
   "MAX_OUTPUT_TOKENS", "REQUEST_TIMEOUT_MS", "MAX_RETRIES", "MAX_TASK_LENGTH",
   "MAX_PROVIDER_CALLS_PER_RUN", "DISABLED_PROVIDERS",
   "RATE_LIMIT_MAX", "RATE_LIMIT_WINDOW_MS", "TRUST_PROXY_HEADERS",
@@ -32,6 +33,7 @@ export const ALL_KEYS = {
   OPENAI_API_KEY: "test-openai-key",
   ANTHROPIC_API_KEY: "test-anthropic-key",
   PERPLEXITY_API_KEY: "test-perplexity-key",
+  GEMINI_API_KEY: "test-gemini-key",
 };
 
 export interface FetchCall {
@@ -96,3 +98,13 @@ export function mockFetch(
 export const OPENAI_URL = "api.openai.com";
 export const ANTHROPIC_URL = "api.anthropic.com";
 export const PERPLEXITY_URL = "api.perplexity.ai";
+export const GEMINI_URL = "generativelanguage.googleapis.com";
+
+/** Gemini shaped completion. */
+export function generateContentBody(text: string, model = "gemini-test") {
+  return {
+    modelVersion: model,
+    candidates: [{ content: { parts: [{ text }] }, finishReason: "STOP" }],
+    usageMetadata: { promptTokenCount: 10, candidatesTokenCount: 20 },
+  };
+}

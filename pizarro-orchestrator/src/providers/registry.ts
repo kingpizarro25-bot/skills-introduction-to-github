@@ -1,6 +1,7 @@
 import { getConfig } from "@/config/env";
 import type { AIProvider, ProviderId, ProviderInfo } from "@/types/ai";
 import { AnthropicProvider } from "./anthropic";
+import { GeminiProvider } from "./gemini";
 import { MockProvider } from "./mock";
 import { OpenAIProvider } from "./openai";
 import { PerplexityProvider } from "./perplexity";
@@ -18,6 +19,7 @@ const ALL_PROVIDERS: AIProvider[] = [
   new OpenAIProvider(),
   new AnthropicProvider(),
   new PerplexityProvider(),
+  new GeminiProvider(),
   new MockProvider(),
 ];
 

@@ -3,8 +3,8 @@
 Send one task to several AI providers, then compare, review, or combine their
 answers — from a single control panel.
 
-It talks to **OpenAI**, **Anthropic Claude**, and **Perplexity** through their
-HTTP APIs. It does not automate their websites.
+It talks to **OpenAI**, **Anthropic Claude**, **Perplexity**, and **Google
+Gemini** through their HTTP APIs. It does not automate their websites.
 
 ---
 
@@ -19,7 +19,8 @@ USER TASK
 ORCHESTRATOR → TASK ROUTER
    ├── OpenAI
    ├── Claude
-   └── Perplexity
+   ├── Perplexity
+   └── Gemini
    ↓
 COLLECT RESPONSES → COMPARE / SYNTHESIZE
    ↓
@@ -47,6 +48,7 @@ src/
     openai.ts              Chat Completions adapter
     anthropic.ts           Messages API adapter
     perplexity.ts          Chat Completions adapter (+ citations)
+    gemini.ts              generateContent adapter
     mock.ts                DEV-ONLY fake provider, clearly labelled
     registry.ts            The list of providers. Add new ones here.
   orchestrator/
@@ -205,22 +207,28 @@ real provider.
 
 Three steps. None of them touch the orchestrator.
 
-**Step 1 — write the adapter** (`src/providers/gemini.ts`):
+`src/providers/gemini.ts` is a worked example — Gemini's API is shaped quite
+differently from the other three (messages are `contents`/`parts`, the system
+prompt is a separate `systemInstruction`, the model goes in the URL path, and
+auth is `x-goog-api-key` rather than a bearer token) and it still needed only
+two lines outside its own adapter. Read it alongside this section.
+
+**Step 1 — write the adapter** (`src/providers/grok.ts`):
 
 ```ts
-export class GeminiProvider implements AIProvider {
-  readonly id = "gemini";
-  readonly name = "Gemini";
-  get model() { return getConfig().GEMINI_MODEL; }
+export class GrokProvider implements AIProvider {
+  readonly id = "grok";
+  readonly name = "Grok";
+  get model() { return getConfig().GROK_MODEL; }
 
-  isConfigured() { return Boolean(getConfig().GEMINI_API_KEY); }
+  isConfigured() { return Boolean(getConfig().GROK_API_KEY); }
 
   async sendMessage(prompt: string, options: ProviderOptions = {}): Promise<AIResponse> {
     const config = getConfig();
-    if (!config.GEMINI_API_KEY) throw notConfigured(this.name, "GEMINI_API_KEY");
+    if (!config.GROK_API_KEY) throw notConfigured(this.name, "GROK_API_KEY");
 
     const limits = resolveLimits(options);          // applies your cost controls
-    const data = await postJson<GeminiShape>(       // gives you timeout + retries
+    const data = await postJson<GrokShape>(         // gives you timeout + retries
       { url: ..., headers: ..., body: ... },
       limits,
       options.signal,
@@ -230,12 +238,20 @@ export class GeminiProvider implements AIProvider {
 }
 ```
 
+Throw `ProviderError` for anything that is not a usable answer, and say *why* —
+`src/providers/gemini.ts` distinguishes a safety block from a token-cap cutoff,
+so the dashboard shows a reason instead of "empty response".
+
 **Step 2 — add its config** to `src/config/env.ts` and `.env.example`:
 
 ```ts
-GEMINI_API_KEY: optionalSecret,
-GEMINI_MODEL: optionalString("gemini-2.5-pro"),
+GROK_API_KEY: optionalSecret,
+GROK_MODEL: optionalString("grok-4"),
+GROK_BASE_URL: optionalString("https://api.x.ai/v1"),
 ```
+
+Add the key to the list in `validateEnvOnStartup()` too, so a missing key is
+reported at boot.
 
 **Step 3 — register it** in `src/providers/registry.ts`:
 
@@ -244,15 +260,14 @@ const ALL_PROVIDERS: AIProvider[] = [
   new OpenAIProvider(),
   new AnthropicProvider(),
   new PerplexityProvider(),
-  new GeminiProvider(),   // ← the only orchestrator-facing change
+  new GeminiProvider(),
+  new GrokProvider(),   // ← the only orchestrator-facing change
   new MockProvider(),
 ];
 ```
 
 It now appears in the dashboard, can be selected in any mode, and can serve as a
 judge. Nothing in `src/orchestrator/` changed.
-
----
 
 ## 9. How the four orchestration modes work
 

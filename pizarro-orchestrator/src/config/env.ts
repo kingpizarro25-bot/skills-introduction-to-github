@@ -49,6 +49,10 @@ const EnvSchema = z.object({
   PERPLEXITY_MODEL: optionalString("sonar"),
   PERPLEXITY_BASE_URL: optionalString("https://api.perplexity.ai"),
 
+  GEMINI_API_KEY: optionalSecret,
+  GEMINI_MODEL: optionalString("gemini-2.5-flash"),
+  GEMINI_BASE_URL: optionalString("https://generativelanguage.googleapis.com/v1beta"),
+
   // --- Cost controls ------------------------------------------------------
   MAX_OUTPUT_TOKENS: intInRange(1024, 1, 32000),
   REQUEST_TIMEOUT_MS: intInRange(60_000, 1_000, 300_000),
@@ -141,6 +145,7 @@ export function validateEnvOnStartup(source: NodeJS.ProcessEnv = process.env): s
     ["OPENAI_API_KEY", config.OPENAI_API_KEY],
     ["ANTHROPIC_API_KEY", config.ANTHROPIC_API_KEY],
     ["PERPLEXITY_API_KEY", config.PERPLEXITY_API_KEY],
+    ["GEMINI_API_KEY", config.GEMINI_API_KEY],
   ];
   const missing = keys.filter(([, v]) => !v).map(([k]) => k);
 
