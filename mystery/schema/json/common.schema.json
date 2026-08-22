@@ -1,0 +1,185 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mystery.schema/v1/common.schema.json",
+  "title": "MYSTERY v1 — common definitions",
+  "description": "Shared enums, identifier formats and value objects for the MYSTERY investigation engine. Major version is encoded in the $id; minor/patch changes are additive only.",
+  "$defs": {
+    "schema_version": {
+      "type": "string",
+      "pattern": "^1\\.\\d+\\.\\d+$",
+      "description": "Semantic version of the v1 schema family. Additive changes bump minor; breaking changes require a new $id major."
+    },
+    "case_id": {
+      "type": "string",
+      "pattern": "^MYS-[0-9]{8}-[0-9]{6}$",
+      "description": "System-generated. MYS-YYYYMMDD-NNNNNN. Never user supplied."
+    },
+    "case_alias": {
+      "type": "string",
+      "pattern": "^[A-Z0-9][A-Z0-9_-]{2,63}$",
+      "description": "Optional human label. Not an identifier: not unique, not used for indexing or cross-references."
+    },
+    "hypothesis_id": { "type": "string", "pattern": "^H-[0-9]{3,}$" },
+    "evidence_id": { "type": "string", "pattern": "^E-[0-9]{4,}$" },
+    "finding_id": { "type": "string", "pattern": "^F-[0-9]{3,}$" },
+    "test_id": { "type": "string", "pattern": "^T-[0-9]{4,}$" },
+    "lesson_id": { "type": "string", "pattern": "^LSN-[0-9]{8}-[0-9]{6}$" },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "RFC 3339 with explicit offset. Never a naive local time."
+    },
+    "hash": {
+      "type": "string",
+      "pattern": "^(sha256|sha512|blake2b512):[0-9a-f]{64,128}$",
+      "description": "Algorithm-prefixed digest. sha256 is the floor; stronger algorithms are accepted so the policy stays agile."
+    },
+    "actor": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "description": "Who performed the action: 'user', 'agent', or a named principal. Single-user today, principal-shaped for later."
+    },
+    "primary_domain": {
+      "enum": ["debugging", "research", "security", "fraud", "workflow", "analysis", "general"],
+      "description": "Closed set. Specialisation happens through subdomain tags, never by extending this enum."
+    },
+    "subdomain": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]{2,39}$",
+      "description": "Open tag vocabulary. Canonical tags are registered in docs/decisions.md; unknown tags are allowed but inherit no constraint relaxation."
+    },
+    "case_status": {
+      "enum": [
+        "created", "recon", "hypothesis", "investigation", "analysis",
+        "resolved", "partially_resolved", "blocked", "inconclusive", "suspended", "closed"
+      ]
+    },
+    "terminal_case_status": {
+      "enum": ["resolved", "partially_resolved", "blocked", "inconclusive", "closed"]
+    },
+    "hypothesis_status": {
+      "enum": ["untested", "testing", "supported", "rejected", "uncertain", "untestable", "superseded"]
+    },
+    "finding_status": {
+      "enum": ["resolved", "partially_resolved", "inconclusive", "blocked"]
+    },
+    "lesson_status": {
+      "enum": ["candidate", "validated", "deprecated", "retired", "conflicted"]
+    },
+    "authorization_type": {
+      "enum": ["owner", "written_permission", "lab", "training_environment"]
+    },
+    "evidence_type": {
+      "enum": [
+        "terminal_output", "log", "file", "screenshot", "network_capture",
+        "database_record", "document", "interview", "metric", "code_artifact",
+        "derived_analysis", "external_report"
+      ]
+    },
+    "classification": {
+      "enum": ["public", "internal", "confidential", "restricted"]
+    },
+    "retention": {
+      "enum": ["ephemeral", "case_lifetime", "30d", "90d", "1y", "7y", "legal_hold"]
+    },
+    "constraint_id": {
+      "enum": [
+        "scope_escape",
+        "evidence_alteration",
+        "activity_concealment",
+        "credential_guessing",
+        "authentication_bypass",
+        "lateral_movement",
+        "persistence",
+        "unrelated_exfiltration",
+        "availability_destruction",
+        "anti_forensics",
+        "domain_relabeling"
+      ],
+      "description": "Universal MUST_NOT invariants. Enforced at execution time by the gate, not by prose."
+    },
+    "rejection_reason": {
+      "enum": [
+        "out_of_scope",
+        "constraint_violation",
+        "risk_threshold_exceeded",
+        "missing_authorization",
+        "infeasible"
+      ]
+    },
+    "factor_score": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 5,
+      "description": "Independent 0-5 rating. Scored per dimension; never collapsed into a single subjective number by the author."
+    },
+    "confidence": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "authorization_basis": {
+      "type": "object",
+      "description": "Auditable authorization record. Does not prove authorization; makes its absence undeniable.",
+      "properties": {
+        "type": { "$ref": "#/$defs/authorization_type" },
+        "reference": {
+          "type": "string",
+          "maxLength": 512,
+          "description": "Ticket, document or engagement reference."
+        },
+        "granted_by": { "$ref": "#/$defs/actor" },
+        "recorded_at": { "$ref": "#/$defs/timestamp" },
+        "expires_at": { "$ref": "#/$defs/timestamp" }
+      },
+      "required": ["type", "recorded_at"],
+      "additionalProperties": false
+    },
+    "scope": {
+      "type": "object",
+      "description": "Immutable after case creation. Locked with a timestamp and bound to the case id.",
+      "properties": {
+        "statement": { "type": "string", "minLength": 1, "maxLength": 4096 },
+        "assets_in_scope": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "minItems": 1
+        },
+        "assets_out_of_scope": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "locked_at": { "$ref": "#/$defs/timestamp" },
+        "locked_by": { "$ref": "#/$defs/actor" },
+        "scope_hash": { "$ref": "#/$defs/hash" }
+      },
+      "required": ["statement", "assets_in_scope", "assets_out_of_scope", "locked_at", "locked_by", "scope_hash"],
+      "additionalProperties": false
+    },
+    "open_question": {
+      "type": "object",
+      "properties": {
+        "text": { "type": "string", "minLength": 1 },
+        "raised_at": { "$ref": "#/$defs/timestamp" },
+        "blocking": { "type": "boolean", "default": false },
+        "answered_at": { "$ref": "#/$defs/timestamp" },
+        "answer": { "type": "string" }
+      },
+      "required": ["text", "raised_at"],
+      "additionalProperties": false
+    },
+    "journal_entry": {
+      "type": "object",
+      "description": "Append-only audit record. Concealment of activity is itself a constraint violation.",
+      "properties": {
+        "at": { "$ref": "#/$defs/timestamp" },
+        "actor": { "$ref": "#/$defs/actor" },
+        "action": { "type": "string", "minLength": 1 },
+        "detail": { "type": "object" }
+      },
+      "required": ["at", "actor", "action"],
+      "additionalProperties": false
+    }
+  }
+}

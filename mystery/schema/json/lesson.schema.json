@@ -1,0 +1,92 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mystery.schema/v1/lesson.schema.json",
+  "title": "MYSTERY v1 — Lesson",
+  "description": "Knowledge-base entry. A single case produces a candidate, never a validated truth.",
+  "type": "object",
+  "properties": {
+    "schema_version": { "$ref": "common.schema.json#/$defs/schema_version" },
+    "lesson_id": { "$ref": "common.schema.json#/$defs/lesson_id" },
+    "statement": { "type": "string", "minLength": 1, "maxLength": 4096 },
+    "source_case_ids": {
+      "type": "array",
+      "items": { "$ref": "common.schema.json#/$defs/case_id" },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "domain_tags": {
+      "type": "array",
+      "items": { "$ref": "common.schema.json#/$defs/subdomain" },
+      "uniqueItems": true,
+      "default": []
+    },
+    "primary_domain": { "$ref": "common.schema.json#/$defs/primary_domain" },
+    "scope_of_applicability": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Where this lesson holds. A lesson without stated limits is how a knowledge base rots."
+    },
+    "confidence": { "$ref": "common.schema.json#/$defs/confidence" },
+    "supporting_evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "case_id": { "$ref": "common.schema.json#/$defs/case_id" },
+          "evidence_id": { "$ref": "common.schema.json#/$defs/evidence_id" },
+          "note": { "type": "string" }
+        },
+        "required": ["case_id"],
+        "additionalProperties": false
+      },
+      "default": []
+    },
+    "contradicting_evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "case_id": { "$ref": "common.schema.json#/$defs/case_id" },
+          "evidence_id": { "$ref": "common.schema.json#/$defs/evidence_id" },
+          "note": { "type": "string" },
+          "resolved": { "type": "boolean", "default": false }
+        },
+        "required": ["case_id"],
+        "additionalProperties": false
+      },
+      "default": []
+    },
+    "created_at": { "$ref": "common.schema.json#/$defs/timestamp" },
+    "last_validated_at": { "$ref": "common.schema.json#/$defs/timestamp" },
+    "status": { "$ref": "common.schema.json#/$defs/lesson_status" },
+    "supersedes": { "$ref": "common.schema.json#/$defs/lesson_id" },
+    "superseded_by": { "$ref": "common.schema.json#/$defs/lesson_id" },
+    "journal": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/journal_entry" }, "default": [] }
+  },
+  "required": [
+    "schema_version", "lesson_id", "statement", "source_case_ids", "domain_tags",
+    "scope_of_applicability", "confidence", "supporting_evidence",
+    "contradicting_evidence", "created_at", "status"
+  ],
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "description": "R-LSN-01 — promotion to validated requires confirmation from at least two distinct cases and a validation timestamp.",
+      "if": { "properties": { "status": { "const": "validated" } }, "required": ["status"] },
+      "then": {
+        "required": ["last_validated_at"],
+        "properties": { "source_case_ids": { "minItems": 2 } }
+      }
+    },
+    {
+      "description": "R-LSN-02 — a conflicted lesson must carry the contradicting evidence that conflicted it.",
+      "if": { "properties": { "status": { "const": "conflicted" } }, "required": ["status"] },
+      "then": { "properties": { "contradicting_evidence": { "minItems": 1 } } }
+    },
+    {
+      "description": "R-LSN-03 — a retired lesson must name its successor.",
+      "if": { "properties": { "status": { "const": "retired" } }, "required": ["status"] },
+      "then": { "required": ["superseded_by"] }
+    }
+  ]
+}

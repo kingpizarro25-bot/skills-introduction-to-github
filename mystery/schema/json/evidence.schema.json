@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mystery.schema/v1/evidence.schema.json",
+  "title": "MYSTERY v1 — Evidence",
+  "description": "Append-only. An evidence object is never edited in place; every transformation produces a new object linked by derived_from.",
+  "type": "object",
+  "properties": {
+    "schema_version": { "$ref": "common.schema.json#/$defs/schema_version" },
+    "id": { "$ref": "common.schema.json#/$defs/evidence_id" },
+    "case_id": { "$ref": "common.schema.json#/$defs/case_id" },
+    "type": { "$ref": "common.schema.json#/$defs/evidence_type" },
+    "source": { "type": "string", "minLength": 1, "maxLength": 512 },
+    "captured_at": { "$ref": "common.schema.json#/$defs/timestamp" },
+    "captured_by": { "$ref": "common.schema.json#/$defs/actor" },
+    "description": { "type": "string", "minLength": 1, "maxLength": 4096 },
+    "hash": { "$ref": "common.schema.json#/$defs/hash" },
+    "original_reference": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Locator for the preserved original artifact (artifact://, file://, s3://...)."
+    },
+    "related_hypotheses": {
+      "type": "array",
+      "items": { "$ref": "common.schema.json#/$defs/hypothesis_id" },
+      "uniqueItems": true,
+      "default": []
+    },
+    "produced_by_test": { "$ref": "common.schema.json#/$defs/test_id" },
+    "classification": { "$ref": "common.schema.json#/$defs/classification" },
+    "retention": { "$ref": "common.schema.json#/$defs/retention" },
+    "derived_from": {
+      "$ref": "common.schema.json#/$defs/evidence_id",
+      "description": "Present on every processed/derived artifact. Absent means this object is an original capture."
+    },
+    "derivation": {
+      "type": "object",
+      "description": "How the derived object was produced from its parent. Required whenever derived_from is set.",
+      "properties": {
+        "method": { "type": "string", "minLength": 1 },
+        "tool": { "type": "string" },
+        "parameters": { "type": "object" },
+        "performed_at": { "$ref": "common.schema.json#/$defs/timestamp" },
+        "performed_by": { "$ref": "common.schema.json#/$defs/actor" }
+      },
+      "required": ["method", "performed_at", "performed_by"],
+      "additionalProperties": false
+    },
+    "integrity": {
+      "type": "object",
+      "properties": {
+        "append_only": { "const": true },
+        "original_preserved": { "const": true },
+        "verified": { "type": "boolean" },
+        "verified_at": { "$ref": "common.schema.json#/$defs/timestamp" },
+        "hash_algorithm": { "enum": ["sha256", "sha512", "blake2b512"] }
+      },
+      "required": ["append_only", "original_preserved", "verified"],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "schema_version", "id", "case_id", "type", "source", "captured_at",
+    "captured_by", "description", "hash", "original_reference",
+    "related_hypotheses", "classification", "retention", "integrity"
+  ],
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "description": "R-EVD-01 — derived evidence must describe its derivation.",
+      "if": { "required": ["derived_from"] },
+      "then": { "required": ["derivation"] }
+    },
+    {
+      "description": "R-EVD-02 — restricted material may not be marked ephemeral.",
+      "if": { "properties": { "classification": { "const": "restricted" } }, "required": ["classification"] },
+      "then": { "properties": { "retention": { "not": { "const": "ephemeral" } } } }
+    }
+  ]
+}

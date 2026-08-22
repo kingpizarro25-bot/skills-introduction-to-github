@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mystery.schema/v1/hypothesis.schema.json",
+  "title": "MYSTERY v1 — Hypothesis",
+  "type": "object",
+  "properties": {
+    "schema_version": { "$ref": "common.schema.json#/$defs/schema_version" },
+    "id": { "$ref": "common.schema.json#/$defs/hypothesis_id" },
+    "case_id": { "$ref": "common.schema.json#/$defs/case_id" },
+    "statement": { "type": "string", "minLength": 1, "maxLength": 4096 },
+    "created_at": { "$ref": "common.schema.json#/$defs/timestamp" },
+    "created_by": { "$ref": "common.schema.json#/$defs/actor" },
+    "status": { "$ref": "common.schema.json#/$defs/hypothesis_status" },
+    "factors": {
+      "type": "object",
+      "description": "Six independently scored dimensions. Priority is derived, never authored directly.",
+      "properties": {
+        "likelihood": { "$ref": "common.schema.json#/$defs/factor_score" },
+        "evidence_support": { "$ref": "common.schema.json#/$defs/factor_score" },
+        "information_gain": {
+          "$ref": "common.schema.json#/$defs/factor_score",
+          "description": "How much uncertainty a decisive test would eliminate. Keeps the engine off cheap-but-useless tests."
+        },
+        "impact": { "$ref": "common.schema.json#/$defs/factor_score" },
+        "test_cost": { "$ref": "common.schema.json#/$defs/factor_score" },
+        "risk": { "$ref": "common.schema.json#/$defs/factor_score" }
+      },
+      "required": ["likelihood", "evidence_support", "information_gain", "impact", "test_cost", "risk"],
+      "additionalProperties": false
+    },
+    "priority_score": {
+      "type": "object",
+      "description": "Derived from factors and the active weight profile. Recomputed on every factor change.",
+      "properties": {
+        "raw": { "type": "number" },
+        "normalized": { "type": "number", "minimum": 0, "maximum": 1 },
+        "weight_profile": { "type": "string", "minLength": 1 },
+        "computed_at": { "$ref": "common.schema.json#/$defs/timestamp" }
+      },
+      "required": ["raw", "normalized", "weight_profile", "computed_at"],
+      "additionalProperties": false
+    },
+    "supporting_evidence": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/evidence_id" }, "default": [] },
+    "contradicting_evidence": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/evidence_id" }, "default": [] },
+    "open_questions": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/open_question" }, "default": [] },
+    "untestable_reason": { "$ref": "common.schema.json#/$defs/rejection_reason" },
+    "supersedes": { "$ref": "common.schema.json#/$defs/hypothesis_id" },
+    "superseded_by": { "$ref": "common.schema.json#/$defs/hypothesis_id" },
+    "updated_at": { "$ref": "common.schema.json#/$defs/timestamp" }
+  },
+  "required": [
+    "schema_version", "id", "case_id", "statement", "created_at", "created_by",
+    "status", "factors", "priority_score", "supporting_evidence",
+    "contradicting_evidence", "open_questions"
+  ],
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "description": "R-HYP-01 — an untestable hypothesis must record why it cannot be tested.",
+      "if": { "properties": { "status": { "const": "untestable" } }, "required": ["status"] },
+      "then": { "required": ["untestable_reason"] }
+    },
+    {
+      "description": "R-HYP-02 — a superseded hypothesis must point at its successor.",
+      "if": { "properties": { "status": { "const": "superseded" } }, "required": ["status"] },
+      "then": { "required": ["superseded_by"] }
+    }
+  ]
+}

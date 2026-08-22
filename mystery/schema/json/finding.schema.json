@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mystery.schema/v1/finding.schema.json",
+  "title": "MYSTERY v1 — Finding",
+  "description": "The conclusion of a case or of a distinct thread within one. Inconclusive is a first-class, fully valid outcome.",
+  "type": "object",
+  "properties": {
+    "schema_version": { "$ref": "common.schema.json#/$defs/schema_version" },
+    "id": { "$ref": "common.schema.json#/$defs/finding_id" },
+    "case_id": { "$ref": "common.schema.json#/$defs/case_id" },
+    "status": { "$ref": "common.schema.json#/$defs/finding_status" },
+    "summary": { "type": "string", "minLength": 1, "maxLength": 8192 },
+    "created_at": { "$ref": "common.schema.json#/$defs/timestamp" },
+    "created_by": { "$ref": "common.schema.json#/$defs/actor" },
+    "confidence": { "$ref": "common.schema.json#/$defs/confidence" },
+    "supported_hypotheses": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/hypothesis_id" }, "default": [] },
+    "rejected_hypotheses": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/hypothesis_id" }, "default": [] },
+    "competing_hypotheses": {
+      "type": "array",
+      "items": { "$ref": "common.schema.json#/$defs/hypothesis_id" },
+      "description": "Hypotheses the evidence cannot separate. Required when the finding is inconclusive.",
+      "default": []
+    },
+    "evidence": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/evidence_id" }, "default": [] },
+    "missing_evidence": { "type": "array", "items": { "type": "string", "minLength": 1 }, "default": [] },
+    "next_best_test": { "type": "string", "minLength": 1 },
+    "blockers": { "type": "array", "items": { "type": "string", "minLength": 1 }, "default": [] },
+    "recommendations": { "type": "array", "items": { "type": "string", "minLength": 1 }, "default": [] }
+  },
+  "required": [
+    "schema_version", "id", "case_id", "status", "summary", "created_at",
+    "created_by", "confidence", "evidence"
+  ],
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "description": "R-FND-01 — an inconclusive finding must name what is still competing, what is missing, and what to test next. Uncertainty is recorded, never smoothed over.",
+      "if": { "properties": { "status": { "const": "inconclusive" } }, "required": ["status"] },
+      "then": {
+        "required": ["competing_hypotheses", "missing_evidence", "next_best_test"],
+        "properties": {
+          "competing_hypotheses": { "minItems": 2 },
+          "missing_evidence": { "minItems": 1 }
+        }
+      }
+    },
+    {
+      "description": "R-FND-02 — a blocked finding must state its blockers.",
+      "if": { "properties": { "status": { "const": "blocked" } }, "required": ["status"] },
+      "then": { "required": ["blockers"], "properties": { "blockers": { "minItems": 1 } } }
+    },
+    {
+      "description": "R-FND-03 — a resolved finding must rest on at least one supported hypothesis and one piece of evidence.",
+      "if": { "properties": { "status": { "const": "resolved" } }, "required": ["status"] },
+      "then": {
+        "required": ["supported_hypotheses"],
+        "properties": {
+          "supported_hypotheses": { "minItems": 1 },
+          "evidence": { "minItems": 1 }
+        }
+      }
+    }
+  ]
+}
