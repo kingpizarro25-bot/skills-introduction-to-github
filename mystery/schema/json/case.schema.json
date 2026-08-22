@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mystery.schema/v1/case.schema.json",
+  "title": "MYSTERY v1 — Case",
+  "type": "object",
+  "properties": {
+    "schema_version": { "$ref": "common.schema.json#/$defs/schema_version" },
+    "case_id": { "$ref": "common.schema.json#/$defs/case_id" },
+    "case_alias": { "$ref": "common.schema.json#/$defs/case_alias" },
+    "created_at": { "$ref": "common.schema.json#/$defs/timestamp" },
+    "created_by": { "$ref": "common.schema.json#/$defs/actor" },
+    "problem_statement": { "type": "string", "minLength": 1, "maxLength": 8192 },
+    "primary_domain": { "$ref": "common.schema.json#/$defs/primary_domain" },
+    "subdomain": {
+      "type": "array",
+      "items": { "$ref": "common.schema.json#/$defs/subdomain" },
+      "uniqueItems": true,
+      "default": []
+    },
+    "constraint_floor": {
+      "type": "array",
+      "items": { "$ref": "common.schema.json#/$defs/constraint_id" },
+      "uniqueItems": true,
+      "description": "Constraint set computed at creation from the declared domain. The effective constraint set may only grow; reclassification can never drop a constraint below this floor."
+    },
+    "scope": { "$ref": "common.schema.json#/$defs/scope" },
+    "authorization_basis": { "$ref": "common.schema.json#/$defs/authorization_basis" },
+    "known_facts": { "type": "array", "items": { "type": "string", "minLength": 1 }, "default": [] },
+    "unknowns": { "type": "array", "items": { "type": "string", "minLength": 1 }, "default": [] },
+    "case_status": { "$ref": "common.schema.json#/$defs/case_status" },
+    "open_questions": {
+      "type": "array",
+      "items": { "$ref": "common.schema.json#/$defs/open_question" },
+      "default": []
+    },
+    "hypotheses": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/hypothesis_id" }, "default": [] },
+    "evidence": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/evidence_id" }, "default": [] },
+    "findings": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/finding_id" }, "default": [] },
+    "closed_at": { "$ref": "common.schema.json#/$defs/timestamp" },
+    "journal": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/journal_entry" }, "default": [] }
+  },
+  "required": [
+    "schema_version", "case_id", "created_at", "created_by", "problem_statement",
+    "primary_domain", "constraint_floor", "scope", "known_facts", "unknowns",
+    "case_status", "open_questions"
+  ],
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "description": "R-CASE-01 — security cases require an authorization basis.",
+      "if": { "properties": { "primary_domain": { "const": "security" } }, "required": ["primary_domain"] },
+      "then": { "required": ["authorization_basis"] }
+    },
+    {
+      "description": "R-CASE-02 — terminal statuses require a closing timestamp.",
+      "if": { "properties": { "case_status": { "$ref": "common.schema.json#/$defs/terminal_case_status" } }, "required": ["case_status"] },
+      "then": { "required": ["closed_at"] }
+    }
+  ]
+}
