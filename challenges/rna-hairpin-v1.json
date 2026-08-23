@@ -1,0 +1,43 @@
+{
+  "challenge_id": "rna-hairpin-v1",
+  "domain": "rna_secondary_structure",
+  "objective": "Identify RNA sequences that fold into a specified hairpin secondary structure, so that the platform's ranking can be compared against solutions already known to the challenge author.",
+  "known_data": {
+    "target_shape_description": "A four-base-pair stem closing a four-base loop.",
+    "experimental_records": 0,
+    "notes": "This is a retrospective challenge. The author already holds a set of sequences that reach the target shape; those are withheld from participants and used only to score the platform itself."
+  },
+  "variables": {
+    "alphabet": "ACGU",
+    "length": 12,
+    "starting_point": "ACACACACACAC"
+  },
+  "constraints": [
+    {
+      "name": "no long homopolymer runs",
+      "kind": "max_run_length",
+      "value": 5
+    }
+  ],
+  "metric": {
+    "id": "rna_structure_match",
+    "target_structure": "((((....))))",
+    "promotion_threshold": 0.9
+  },
+  "governance": {
+    "tier": "public",
+    "license": "CC BY 4.0",
+    "attribution": "Contributors are named on any publication describing results from this challenge.",
+    "publication_policy": "Results, including negative results, are published openly. No contribution is assigned to the platform."
+  },
+  "validation": {
+    "held_out_solutions": [
+      "GGGGAAAACCCC",
+      "GGCGAAAACGCC",
+      "GCGCAAAAGCGC",
+      "CCGGAAAACCGG"
+    ],
+    "provenance": "Constructed for this demonstration rather than drawn from a published dataset; a production retrospective challenge would cite the source study and its accession identifiers here.",
+    "hit_threshold": 1.0
+  }
+}
