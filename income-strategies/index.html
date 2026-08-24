@@ -1,0 +1,737 @@
+<title>Five Ways to Bill</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=IBM+Plex+Mono:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap">
+
+<style>
+  :root {
+    --paper:      #F1F3F1;
+    --surface:    #FFFFFF;
+    --ink:        #12201F;
+    --muted:      #5C6B69;
+    --accent:     #0B6E5F;
+    --accent-dim: #0B6E5F1a;
+    --gold:       #9C6614;
+    --gold-dim:   #9C661418;
+    --rule:       #D6DCD8;
+    --rule-soft:  #E4E9E6;
+    --warn:       #A2451F;
+
+    --f-display: "Bricolage Grotesque", "Helvetica Neue", Arial, sans-serif;
+    --f-body:    "Newsreader", Georgia, "Times New Roman", serif;
+    --f-mono:    "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+    --measure: 66ch;
+    --pad: clamp(1.25rem, 4vw, 3.5rem);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper:      #0E1615;
+      --surface:    #16201F;
+      --ink:        #E8EEEB;
+      --muted:      #93A5A1;
+      --accent:     #3DBFA6;
+      --accent-dim: #3DBFA622;
+      --gold:       #E0A54A;
+      --gold-dim:   #E0A54A20;
+      --rule:       #24312F;
+      --rule-soft:  #1D2827;
+      --warn:       #E28B62;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --paper:      #0E1615;
+    --surface:    #16201F;
+    --ink:        #E8EEEB;
+    --muted:      #93A5A1;
+    --accent:     #3DBFA6;
+    --accent-dim: #3DBFA622;
+    --gold:       #E0A54A;
+    --gold-dim:   #E0A54A20;
+    --rule:       #24312F;
+    --rule-soft:  #1D2827;
+    --warn:       #E28B62;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--f-body);
+    font-size: 17px;
+    line-height: 1.6;
+    margin: 0;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap {
+    max-width: 74rem;
+    margin: 0 auto;
+    padding: var(--pad);
+    display: flex;
+    flex-direction: column;
+    gap: clamp(2.5rem, 6vw, 4.5rem);
+  }
+
+  .eyebrow {
+    font-family: var(--f-mono);
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 0;
+  }
+
+  /* ---------- masthead ---------- */
+
+  .masthead { display: flex; flex-direction: column; gap: 1.5rem; }
+
+  .masthead h1 {
+    font-family: var(--f-display);
+    font-weight: 800;
+    font-size: clamp(2.6rem, 7vw, 4.6rem);
+    line-height: 0.98;
+    letter-spacing: -0.025em;
+    text-wrap: balance;
+    margin: 0;
+  }
+
+  .masthead h1 em {
+    font-style: normal;
+    color: var(--accent);
+  }
+
+  .standfirst {
+    max-width: var(--measure);
+    font-size: 1.15rem;
+    color: var(--muted);
+    margin: 0;
+  }
+
+  .standfirst strong { color: var(--ink); font-weight: 500; }
+
+  /* ---------- stack readout ---------- */
+
+  .readout {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+    gap: 1px;
+    background: var(--rule);
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .cell {
+    background: var(--surface);
+    padding: 0.9rem 1rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+
+  .cell .k {
+    font-family: var(--f-mono);
+    font-size: 0.64rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .cell .v {
+    font-family: var(--f-display);
+    font-weight: 700;
+    font-size: 1.5rem;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .cell .n { font-size: 0.82rem; color: var(--muted); line-height: 1.35; }
+
+  .v.ok   { color: var(--accent); }
+  .v.zero { color: var(--warn); }
+
+  /* ---------- ledger table ---------- */
+
+  .scroller { overflow-x: auto; border: 1px solid var(--rule); border-radius: 3px; background: var(--surface); }
+
+  table { border-collapse: collapse; width: 100%; min-width: 46rem; }
+
+  thead th {
+    font-family: var(--f-mono);
+    font-size: 0.64rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 500;
+    text-align: left;
+    padding: 0.85rem 1rem;
+    border-bottom: 1px solid var(--rule);
+    white-space: nowrap;
+  }
+
+  tbody td {
+    padding: 0.95rem 1rem;
+    border-bottom: 1px solid var(--rule-soft);
+    vertical-align: top;
+    font-size: 0.95rem;
+  }
+
+  tbody tr:last-child td { border-bottom: 0; }
+
+  td.rank {
+    font-family: var(--f-mono);
+    font-weight: 600;
+    color: var(--accent);
+    font-variant-numeric: tabular-nums;
+    width: 2.5rem;
+  }
+
+  td.name { font-family: var(--f-display); font-weight: 700; letter-spacing: -0.01em; }
+
+  td.num { font-family: var(--f-mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+  .chip {
+    display: inline-block;
+    font-family: var(--f-mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 0.2rem 0.5rem;
+    border-radius: 2px;
+    white-space: nowrap;
+  }
+
+  .chip.mrr  { background: var(--accent-dim); color: var(--accent); }
+  .chip.once { background: var(--gold-dim);   color: var(--gold); }
+
+  /* ---------- strategy sections ---------- */
+
+  .plays { display: flex; flex-direction: column; gap: 1.25rem; }
+
+  .play {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    padding: clamp(1.25rem, 3vw, 2rem);
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  @media (min-width: 60rem) {
+    .play { grid-template-columns: minmax(0, 1.15fr) minmax(16rem, 0.85fr); gap: 2.5rem; }
+  }
+
+  .play-head { display: flex; align-items: baseline; gap: 0.75rem; margin-bottom: 0.9rem; }
+
+  .play-rank {
+    font-family: var(--f-mono);
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--accent);
+    font-variant-numeric: tabular-nums;
+    padding-top: 0.15rem;
+  }
+
+  .play h3 {
+    font-family: var(--f-display);
+    font-weight: 700;
+    font-size: clamp(1.35rem, 3vw, 1.75rem);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin: 0;
+    text-wrap: balance;
+  }
+
+  .play p { margin: 0 0 0.9rem; max-width: var(--measure); }
+  .play p:last-child { margin-bottom: 0; }
+
+  .play .lede { font-size: 1.05rem; }
+
+  .aside { display: flex; flex-direction: column; gap: 1.25rem; }
+
+  .price {
+    border-left: 2px solid var(--gold);
+    padding-left: 0.9rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+
+  .price .amt {
+    font-family: var(--f-display);
+    font-weight: 800;
+    font-size: 1.7rem;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.02em;
+  }
+
+  .price .basis { font-size: 0.85rem; color: var(--muted); }
+
+  .moves { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 0.55rem; counter-reset: mv; }
+
+  .moves li {
+    counter-increment: mv;
+    display: grid;
+    grid-template-columns: 1.4rem 1fr;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+
+  .moves li::before {
+    content: counter(mv);
+    font-family: var(--f-mono);
+    font-size: 0.7rem;
+    color: var(--muted);
+    padding-top: 0.28rem;
+  }
+
+  .blocker {
+    font-size: 0.88rem;
+    color: var(--muted);
+    border-top: 1px solid var(--rule-soft);
+    padding-top: 0.85rem;
+  }
+
+  .blocker b { font-family: var(--f-mono); font-size: 0.66rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--warn); display: block; margin-bottom: 0.25rem; font-weight: 500; }
+
+  .tool {
+    font-family: var(--f-mono);
+    font-size: 0.78rem;
+    background: var(--accent-dim);
+    color: var(--accent);
+    padding: 0.08em 0.35em;
+    border-radius: 2px;
+    white-space: nowrap;
+  }
+
+  /* ---------- sequence ---------- */
+
+  .seq { display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); gap: 1px; background: var(--rule); border: 1px solid var(--rule); border-radius: 3px; overflow: hidden; }
+
+  .seq > div { background: var(--surface); padding: 1.15rem 1.25rem 1.35rem; display: flex; flex-direction: column; gap: 0.45rem; }
+
+  .seq h4 { font-family: var(--f-display); font-weight: 700; font-size: 1.05rem; margin: 0; letter-spacing: -0.01em; }
+
+  .seq p { margin: 0; font-size: 0.9rem; color: var(--muted); }
+
+  /* ---------- asks + sources ---------- */
+
+  .asks { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 0.7rem; max-width: var(--measure); }
+
+  .asks li { display: grid; grid-template-columns: 0.9rem 1fr; gap: 0.7rem; align-items: start; }
+
+  .asks li::before { content: ""; width: 0.5rem; height: 0.5rem; margin-top: 0.55rem; background: var(--accent); border-radius: 1px; }
+
+  section > h2 {
+    font-family: var(--f-display);
+    font-weight: 700;
+    font-size: clamp(1.5rem, 3.5vw, 2rem);
+    letter-spacing: -0.02em;
+    margin: 0.4rem 0 1.4rem;
+    text-wrap: balance;
+  }
+
+  .sources { font-size: 0.82rem; color: var(--muted); }
+  .sources ul { margin: 0.6rem 0 0; padding-left: 1.1rem; display: flex; flex-direction: column; gap: 0.35rem; }
+  .sources a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+
+  a:focus-visible, [tabindex]:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  footer { border-top: 1px solid var(--rule); padding-top: 1.25rem; color: var(--muted); font-size: 0.85rem; }
+</style>
+
+<div class="wrap">
+
+  <header class="masthead">
+    <p class="eyebrow">Pizarro's Studios &middot; Revenue plan &middot; 24 Aug 2026</p>
+    <h1>Five ways to bill,<br>ranked by <em>how fast they pay</em>.</h1>
+    <p class="standfirst">
+      Every play below is built on tooling this account already has connected — not on advice that
+      assumes a team you don't have. Order is <strong>time to first dollar</strong>, not size of
+      cheque. The two slowest are also the two that compound, so they get started in week one and
+      finished later.
+    </p>
+  </header>
+
+  <section>
+    <p class="eyebrow">Live capacity, checked just now</p>
+    <div class="readout">
+      <div class="cell">
+        <span class="k">Apollo lead credits</span>
+        <span class="v ok">80</span>
+        <span class="n">80 verified contacts you can reveal this cycle. None used yet.</span>
+      </div>
+      <div class="cell">
+        <span class="k">Apollo direct dials</span>
+        <span class="v ok">160</span>
+        <span class="n">Phone numbers — the channel local owners actually answer.</span>
+      </div>
+      <div class="cell">
+        <span class="k">Apollo export credits</span>
+        <span class="v zero">0</span>
+        <span class="n">No CSV dumps. Lists live in Apollo or get written out by hand.</span>
+      </div>
+      <div class="cell">
+        <span class="k">Higgsfield credits</span>
+        <span class="v zero">0</span>
+        <span class="n">Plus plan, empty balance. Video play is gated until topped up.</span>
+      </div>
+      <div class="cell">
+        <span class="k">Ready to run</span>
+        <span class="v ok">3 / 5</span>
+        <span class="n">Plays 1, 2 and 5 need nothing bought. 3 needs credits, 4 needs a build.</span>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>The five, side by side</h2>
+    <div class="scroller">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Play</th>
+            <th>First dollar</th>
+            <th>Ticket</th>
+            <th>Type</th>
+            <th>What it costs you to start</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="rank">01</td>
+            <td class="name">Care plans on sites you already shipped</td>
+            <td class="num">3–10 days</td>
+            <td class="num">$150–500/mo</td>
+            <td><span class="chip mrr">Recurring</span></td>
+            <td>An afternoon of emails. No spend.</td>
+          </tr>
+          <tr>
+            <td class="rank">02</td>
+            <td class="name">No-website teardown outreach</td>
+            <td class="num">2–4 weeks</td>
+            <td class="num">$2,500–5,000</td>
+            <td><span class="chip once">Project</span></td>
+            <td>80 Apollo credits + your calling time.</td>
+          </tr>
+          <tr>
+            <td class="rank">03</td>
+            <td class="name">Short-form video retainer</td>
+            <td class="num">3–5 weeks</td>
+            <td class="num">$600–1,500/mo</td>
+            <td><span class="chip mrr">Recurring</span></td>
+            <td>A Higgsfield credit top-up.</td>
+          </tr>
+          <tr>
+            <td class="rank">04</td>
+            <td class="name">Lead-response automation builds</td>
+            <td class="num">5–8 weeks</td>
+            <td class="num">$1,500 + $500/mo</td>
+            <td><span class="chip mrr">Both</span></td>
+            <td>One unpaid reference build.</td>
+          </tr>
+          <tr>
+            <td class="rank">05</td>
+            <td class="name">Productizing what you already automated</td>
+            <td class="num">6–12 weeks</td>
+            <td class="num">$29–199</td>
+            <td><span class="chip once">Catalog</span></td>
+            <td>Packaging time only.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2>The work orders</h2>
+    <div class="plays">
+
+      <article class="play">
+        <div>
+          <div class="play-head">
+            <span class="play-rank">01</span>
+            <h3>Sell a care plan to every site you've already built</h3>
+          </div>
+          <p class="lede">
+            The fastest money in this business is never a new logo. It's the client who already
+            trusts you, whose site is quietly rotting, and who has never once been offered
+            maintenance. You built the thing; nobody is better placed to keep it alive.
+          </p>
+          <p>
+            Agencies price ongoing website retainers at $500–$1,500/month, but for the local-business
+            tier the honest band is $150–$500/month for real coverage. Sell the low end and
+            over-deliver: uptime and backups, plugin and security updates, a monthly content change,
+            and one page-speed pass. Frame it as insurance against the thing they're actually scared
+            of — the site going down during business hours and nobody picking up the phone.
+          </p>
+          <p>
+            This is also the play that makes every other play worth more. A studio with twelve care
+            plans has a floor under it, and a floor is what lets you say no to bad projects.
+          </p>
+        </div>
+        <aside class="aside">
+          <div class="price">
+            <span class="amt">$250<span style="font-size:0.9rem;font-weight:500;color:var(--muted)">/mo</span></span>
+            <span class="basis">Anchor price. $150 basic, $500 with content + SEO upkeep.</span>
+          </div>
+          <ol class="moves">
+            <li>List every site you've shipped, live or half-dead, in one place.</li>
+            <li>Check each one right now — SSL, mobile, load time, broken links. Screenshot the worst finding.</li>
+            <li>Send a one-paragraph note per client leading with that screenshot, not with the offer.</li>
+            <li>Track replies in <span class="tool">HubSpot</span> so renewals don't live in your inbox.</li>
+          </ol>
+          <p class="blocker">
+            <b>What's in the way</b>
+            I don't know your client history — it isn't in this repo or any connected account. Give me
+            the list of past clients and I'll do the audits and draft all the emails in one pass.
+          </p>
+        </aside>
+      </article>
+
+      <article class="play">
+        <div>
+          <div class="play-head">
+            <span class="play-rank">02</span>
+            <h3>Turn the no-website lead finder into a booked-call machine</h3>
+          </div>
+          <p class="lede">
+            You already wrote the hard part. Your <span class="tool">no-website-lead-finder</span>
+            skill finds local businesses with no site, a Facebook-only presence, or something broken
+            and unstyled. What it doesn't do yet is get you in front of the owner — and that's exactly
+            the gap Apollo fills.
+          </p>
+          <p>
+            The chain is: run the skill for a city and niche to get qualified businesses, then use
+            Apollo's people search to find the owner or manager at each one and spend a lead credit
+            revealing the contact. Eighty credits is eighty real humans — enough for a full campaign,
+            not a test. Sequences handle the follow-up, and the 160 direct dials matter more than the
+            emails, because local owners answer phones.
+          </p>
+          <p>
+            The thing that converts isn't the email, it's the artifact attached to it. Send a
+            two-page teardown of what their absent or broken presence is costing them, with a mockup
+            of the homepage they don't have. Small-business builds run $2,000–$8,000; quote $2,500
+            for a five-page site and bundle the first three months of play 01 free, so the retainer
+            starts on day one instead of never.
+          </p>
+        </div>
+        <aside class="aside">
+          <div class="price">
+            <span class="amt">$2,500</span>
+            <span class="basis">Five-page build. Market is $2,000–$8,000; you're winning on speed, not price.</span>
+          </div>
+          <ol class="moves">
+            <li>Pick one city and one niche. Narrow beats broad — the pitch gets reusable.</li>
+            <li>Run the lead-finder skill for 20 qualified businesses.</li>
+            <li>Match owners in <span class="tool">Apollo</span>, reveal 20 contacts, load a 4-touch sequence.</li>
+            <li>Build one teardown template so each new one takes 15 minutes, not two hours.</li>
+          </ol>
+          <p class="blocker">
+            <b>What's in the way</b>
+            Export credits are at zero, so lists stay inside Apollo rather than becoming a
+            spreadsheet. Not a blocker for sending — only for offline sorting.
+          </p>
+        </aside>
+      </article>
+
+      <article class="play">
+        <div>
+          <div class="play-head">
+            <span class="play-rank">03</span>
+            <h3>Sell the video the barbershop can't make itself</h3>
+          </div>
+          <p class="lede">
+            Every local business now knows it needs short-form video and almost none of them can
+            produce it weekly. Traditional UGC creators charge $150–$500 a video, which prices the
+            entire local market out. Generated video collapses that cost to a few dollars an asset —
+            and that gap is the whole business.
+          </p>
+          <p>
+            Your <span class="tool">Higgsfield</span> connection does image, video, and voice
+            generation, has a virality predictor for picking which cuts to push, and publishes
+            straight to TikTok. That's a full production line inside one tool. Sell twelve videos a
+            month at $900 and you're the cheapest option on their desk while still keeping most of
+            it, because the marginal cost of asset thirteen is pennies.
+          </p>
+          <p>
+            Sell it to the clients from plays 01 and 02 first. Someone who just paid you for a site
+            is far easier to sell a content retainer to than a stranger, and the video work keeps you
+            in their inbox monthly — which is where renewals and referrals come from.
+          </p>
+        </div>
+        <aside class="aside">
+          <div class="price">
+            <span class="amt">$900<span style="font-size:0.9rem;font-weight:500;color:var(--muted)">/mo</span></span>
+            <span class="basis">12 videos. Agencies charge $2k–$10k/mo; local tier bears $600–$1,500.</span>
+          </div>
+          <ol class="moves">
+            <li>Top up Higgsfield credits — the balance is empty, so nothing generates today.</li>
+            <li>Produce three spec videos for a business you'd like as a client. Unpaid, on purpose.</li>
+            <li>Run them through the virality predictor and lead the pitch with the strongest.</li>
+            <li>Price in tiers of 8 / 12 / 20 videos so there's an obvious middle to pick.</li>
+          </ol>
+          <p class="blocker">
+            <b>What's in the way</b>
+            Higgsfield balance is 0 credits on a Plus plan. This play is fully blocked until you
+            top up — it's the only one of the five that needs money before it makes money.
+          </p>
+        </aside>
+      </article>
+
+      <article class="play">
+        <div>
+          <div class="play-head">
+            <span class="play-rank">04</span>
+            <h3>Build the thing that answers their leads at 9pm</h3>
+          </div>
+          <p class="lede">
+            The highest-margin work available to you isn't design at all. It's wiring up the boring
+            automation a local business bleeds money without: the missed-call text-back, the form
+            that never got answered, the quote that took three days. Agencies charge a $1,500 build
+            fee plus $250–$1,500/month to run it, and for a single-workflow SMB engagement that's the
+            settled market shape.
+          </p>
+          <p>
+            You have an unfair advantage here that most freelancers don't: the
+            <span class="tool">mcp-builder</span> skill and the Claude Agent SDK mean you can build a
+            real, custom lead-response agent rather than reselling somebody's chatbot subscription.
+            Wire it into their existing tools and it's genuinely hard to rip out — which is the
+            definition of a retainer worth having.
+          </p>
+          <p>
+            Start with one narrow workflow, not a platform. "Every missed call gets a text in 60
+            seconds, and every web form gets a reply before you've read it" is a sentence a plumber
+            understands and will pay for. Sell it as recovered jobs, never as AI.
+          </p>
+        </div>
+        <aside class="aside">
+          <div class="price">
+            <span class="amt">$1,500<span style="font-size:0.9rem;font-weight:500;color:var(--muted)"> + $500/mo</span></span>
+            <span class="basis">Build fee plus run fee — the 2026 default shape for SMB automation.</span>
+          </div>
+          <ol class="moves">
+            <li>Choose one vertical from play 02 where missed calls obviously cost real money.</li>
+            <li>Build the workflow once, free, for a friendly client. That's your demo and your case study.</li>
+            <li>Instrument it — leads captured, response time, jobs recovered. The numbers close the next five.</li>
+            <li>Sell it to the same list. Same buyers, one tier up.</li>
+          </ol>
+          <p class="blocker">
+            <b>What's in the way</b>
+            Longest sales cycle of the five, and it needs one reference build before anyone signs.
+            Start it in week one precisely because it pays in week six.
+          </p>
+        </aside>
+      </article>
+
+      <article class="play">
+        <div>
+          <div class="play-head">
+            <span class="play-rank">05</span>
+            <h3>Sell the system, not just the hours</h3>
+          </div>
+          <p class="lede">
+            You've already built something other people want: a working lead-generation skill, and
+            soon a teardown template, an outreach sequence, and an automation blueprint. Every one of
+            those is a product for the thousands of freelancers doing exactly what you do, badly.
+          </p>
+          <p>
+            The template market rewards specificity over polish — "Notion template" sells nothing,
+            "client onboarding system for freelance web designers" sells. Volume sellers land in the
+            $1,000–$10,000/month range, and the marginal cost of every sale after the first is
+            effectively zero. This won't replace client work this quarter. It's the thing that keeps
+            paying when you take a month off.
+          </p>
+          <p>
+            Critically: build none of this speculatively. Package only what plays 01–04 force you to
+            create anyway. The outreach sequence you write in week two becomes a product in week
+            eight, and you've already been paid once for making it.
+          </p>
+        </div>
+        <aside class="aside">
+          <div class="price">
+            <span class="amt">$49–199</span>
+            <span class="basis">Per pack. Templates clear $10–$200; bundles carry the higher end.</span>
+          </div>
+          <ol class="moves">
+            <li>Keep every asset you make for plays 01–04 in a reusable form from day one.</li>
+            <li>Bundle the strongest three into one specific offer for one specific buyer.</li>
+            <li>Write the sales page from the case study, not from features.</li>
+            <li>Ship it once plays 01–03 are actually earning. Not before.</li>
+          </ol>
+          <p class="blocker">
+            <b>What's in the way</b>
+            Nothing but sequencing — and the real risk is doing this first because it's the most fun.
+            It is last for a reason.
+          </p>
+        </aside>
+      </article>
+
+    </div>
+  </section>
+
+  <section>
+    <h2>The first fourteen days</h2>
+    <div class="seq">
+      <div>
+        <p class="eyebrow">Days 1–3</p>
+        <h4>Warm money</h4>
+        <p>Audit every past site, send the care-plan notes. This is the only work here that can pay inside a week.</p>
+      </div>
+      <div>
+        <p class="eyebrow">Days 3–7</p>
+        <h4>Fill the pipe</h4>
+        <p>One city, one niche, 20 qualified leads, 20 Apollo reveals, sequence live. Calls beat emails.</p>
+      </div>
+      <div>
+        <p class="eyebrow">Days 7–10</p>
+        <h4>Build the artifact</h4>
+        <p>One teardown template you can refill in 15 minutes. This is the asset that makes outreach convert.</p>
+      </div>
+      <div>
+        <p class="eyebrow">Days 10–14</p>
+        <h4>Start the slow one</h4>
+        <p>Scope the reference automation build. It won't pay this month; it's why month two is bigger.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>What I need from you to run any of this</h2>
+    <ul class="asks">
+      <li><strong>A city and a niche.</strong> I can run the lead finder and have 20 qualified businesses with owner contacts ready today — but narrow targeting is what makes the pitch reusable.</li>
+      <li><strong>Your past client list.</strong> Play 01 is the fastest dollar on this page and I can't start it without knowing who you've built for. Names and URLs are enough; I'll do the audits.</li>
+      <li><strong>A decision on Higgsfield credits.</strong> The balance is zero, so the video play doesn't start until you top up. Everything else runs without spending anything.</li>
+      <li><strong>Authorization for Perplexity</strong>, if you want deeper market research than web search gives. It's connected but not authorized, and I can't complete that from here.</li>
+    </ul>
+  </section>
+
+  <section class="sources">
+    <p class="eyebrow">Pricing benchmarks</p>
+    <ul>
+      <li><a href="https://www.goodfirms.co/resources/website-construction-cost-survey/">GoodFirms — Website development cost survey, 2026</a></li>
+      <li><a href="https://theclaymedia.com/website-retainer-services-2026/">Clay Media — What website retainers actually cover in 2026</a></li>
+      <li><a href="https://leadpages.com/blog/average-cost-of-website-design-for-small-business">Leadpages — 2026 web design price guide</a></li>
+      <li><a href="https://sepia-lab.com/en/blog/how-much-does-ugc-cost">Sepia Lab — UGC cost benchmarks, 2026</a></li>
+      <li><a href="https://www.videotok.app/blog/avatar-and-ugc-ads/ugc-ads-rates-traditional-ugc-vs-ai-ugc">VideoTok — Traditional vs. generated UGC rates</a></li>
+      <li><a href="https://thecrunch.io/ai-automation-agency-cost/">The Crunch — AI automation agency pricing models</a></li>
+      <li><a href="https://taskip.net/ai-automation-agency-pricing/">Taskip — What automation agencies charge in 2026</a></li>
+      <li><a href="https://www.coachli.co/blog/sell-notion-templates-your-2026-side-hustle-blueprint">Coachli — Selling templates in 2026</a></li>
+    </ul>
+  </section>
+
+  <footer>
+    Capacity figures read live from the connected Apollo and Higgsfield accounts on 24 August 2026.
+    Pricing bands are market benchmarks, not guarantees.
+  </footer>
+
+</div>
