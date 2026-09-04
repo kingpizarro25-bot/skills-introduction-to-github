@@ -193,7 +193,7 @@ indefinitely. This is the counterweight.
 **Mission** Maintain positioning, voice, visual direction, terminology, and the claims
 the company is allowed to make.
 **Activate when** Publishing across three or more platforms, or messaging has drifted.
-**Covered by** knowledge-vault (`BRAND.md`) + content.
+**Covered by** knowledge-vault (`business/knowledge-vault/BRAND.md`) + content.
 
 ### SEO
 **Mission** Find what buyers search for, build pages and articles around it, track

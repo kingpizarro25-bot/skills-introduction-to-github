@@ -31,7 +31,7 @@ to content; ideas reused across ≥3 platforms.
 ## Constraints
 - Never claim a result the evidence agent cannot back.
 - Never publish externally without owner approval (escalation gate).
-- Voice stays consistent with `BRAND.md`; one business, one story.
+- Voice stays consistent with `business/knowledge-vault/BRAND.md`; one business, one story.
 
 ## Failure conditions
 Content asserting a capability or client result that isn't verified.
