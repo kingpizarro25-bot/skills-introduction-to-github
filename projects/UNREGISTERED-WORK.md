@@ -17,7 +17,7 @@ this file documents.
 
 | Branch | Files | Last commit | Merged to main |
 |---|---|---|---|
-| `claude/pizarro-multi-ai-orchestrator-4q14zx` | 52 | `86f321d` 2026-08-20 — "Add Google Gemini as a fourth provider" | No |
+| `claude/pizarro-multi-ai-orchestrator-4q14zx` | 52 | `86f321d` 2026-08-20 — "Add Google Gemini as a fourth provider" | No — **now registered**, see `projects/pizarro-orchestrator/STATE.md` |
 | `claude/biomedical-discovery-platform-o88jjz` | 36 | `4734fc2` 2026-08-23 — "Add biomedical challenge platform spec and vertical slice" | No |
 | `claude/mystery-v1-hardened-arch-4rqlzg` | 18 | `bde1977` 2026-08-22 — "Add /MYSTERY v1 schemas and runtime core" | No |
 | `claude/income-strategies-s0q1co` | 2 | `eb2015f` 2026-08-24 — "Add revenue plan: five income strategies ranked by time to first dollar" | No |
@@ -34,15 +34,28 @@ Read from the file tree only. **Nothing here has been run, tested, or reviewed.*
   engine, evidence, and gate modules.
 - **income-strategies** — a README and a single HTML page.
 
-## The overlap worth noting
+## Correction, 2026-09-04 — this file first called the orchestrator "duplicate work"
 
-`pizarro-multi-ai-orchestrator` is an AI-coordination system. So is Pizarro Studios OS.
-They were built three weeks apart, by different sessions, in the same repository,
-neither aware of the other.
+**That claim was wrong, and it was made without reading the code.** It rested on the
+branch name and a file listing. The correction stands here rather than being edited away,
+because this file exists to document exactly that kind of mistake.
 
-That is duplicate work, and it is the specific failure the "one owner per unit of work"
-rule and Mission Control's inventory step exist to prevent. It is recorded here as the
-first real lesson rather than quietly deleted.
+Once the branch was actually read and run:
+
+`pizarro-multi-ai-orchestrator` is a **runtime execution engine** — a Next.js app that
+calls four AI provider APIs and reconciles their answers. Pizarro Studios OS is a
+**coordination and knowledge structure** — agent definitions, project state, evidence
+rules. One is software that runs; the other is how work is organized. They are
+complementary, not competing, and neither replaces the other.
+
+The genuine finding is smaller and more useful: the orchestrator implements a **working
+Perplexity provider**, which is a second route to the capability that defect D-2 records
+as unavailable. See `projects/pizarro-orchestrator/STATE.md`.
+
+The real lesson is unchanged and now better evidenced: five sessions could not see each
+other's work. But "they built the same thing twice" was itself an unverified claim,
+asserted with more confidence than the evidence supported — the same failure the evidence
+rules exist to prevent, committed while documenting that failure.
 
 ## Status
 

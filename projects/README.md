@@ -11,10 +11,15 @@ One folder per project. Each has a `STATE.md` — the single authoritative answe
 | [pizarro-shield](pizarro-shield/STATE.md) | Conversation assistance | unknown — needs intake |
 | [market-mentor-ai](market-mentor-ai/STATE.md) | Trading education and risk management | unknown — needs intake |
 | [business-systems](business-systems/STATE.md) | Studio operations and client work | unknown — needs intake |
+| [pizarro-orchestrator](pizarro-orchestrator/STATE.md) | Multi-AI orchestration app (found on an unmerged branch) | **prototype — 76/76 tests pass, builds** |
 
-**Every stage says "unknown" because nothing has been verified in this system yet —
-not because no work exists.** Priority 1 is finishing and verifying existing projects,
-and that cannot start until each project's real state is on record.
+**The six original projects say "unknown" because nothing has been verified in this
+system yet — not because no work exists.** Priority 1 is finishing and verifying existing
+projects, and that cannot start until each project's real state is on record.
+
+`pizarro-orchestrator` is the exception and the proof the process works: it was found on
+an unmerged branch, its tests were run, and it now carries a verified stage backed by
+evidence.
 
 Each `STATE.md` ends with five intake questions. Answering them for one project is
 enough to start; they do not all have to happen at once.
