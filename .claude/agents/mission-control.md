@@ -31,7 +31,7 @@ Owner objective; current project state; agent status reports; blockers.
 | Signal in the request | Owner |
 |---|---|
 | "Is this true / what exists / who else does this" | research |
-| "This business process is painful / slow / manual" | ai-solutions |
+| "This process is painful / slow / manual" — or "should this use AI?" | ai-solutions |
 | "What should version one be" | product-builder |
 | "Build it / fix it / it's broken" | coding |
 | "Does it actually work" | testing |
