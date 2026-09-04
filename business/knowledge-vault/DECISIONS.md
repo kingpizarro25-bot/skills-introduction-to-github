@@ -54,3 +54,46 @@ The cost is a client relationship and possibly a legal exposure.
 indefinitely — adequate for prototypes, not for live client data.
 
 **Revisit when** Real client data enters any system.
+
+---
+
+## 2026-09-04 — Company context lives in CLAUDE.md, not in chat
+
+**Context** The owner supplied company context, priorities, project list, approval
+gates, and working style. Held only in a conversation, that context is lost the moment
+the session ends, and each agent would reconstruct a slightly different version of it.
+
+**Decision** Put it in `CLAUDE.md` at the repository root. Claude Code loads that file
+automatically, so every agent inherits the same context without it being re-pasted.
+Approval gates live there as the single authority; agent files reference it rather than
+restating the list.
+
+**Why** One copy cannot drift. A list repeated in eleven agent files will.
+
+**Alternatives rejected**
+- A `CONTEXT.md` that agents are instructed to read — relies on them remembering to.
+- Copying the approval gates into each agent definition — guarantees drift the first
+  time a gate changes.
+
+**Revisit when** Priorities change, a project is added or retired, or an approval gate
+moves.
+
+---
+
+## 2026-09-04 — Every project starts at "unknown," not at an assumed stage
+
+**Context** Six projects exist (Veridoc, FluencyCoach, Artist Rollout Planner, Pizarro
+Shield, Market Mentor AI, business systems). None has verified state recorded here.
+
+**Decision** Create a `STATE.md` for each, with stage explicitly `unknown — needs owner
+input`, an empty evidence table, and five intake questions. Do not infer or estimate
+stage from project names or from what sounds likely.
+
+**Why** Priority 1 is finishing and verifying existing projects. A guessed stage would
+become the record, and the whole system's value rests on not doing exactly that. An
+honest "unknown" is a starting point; a wrong "80% complete" is a lie that compounds.
+
+**Alternatives rejected** Leaving the projects unrecorded until intake — they would
+stay invisible, and the point is to make the gap visible.
+
+**Revisit when** Each intake is answered; the file is updated per project as it happens.
