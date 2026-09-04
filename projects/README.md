@@ -19,6 +19,13 @@ and that cannot start until each project's real state is on record.
 Each `STATE.md` ends with five intake questions. Answering them for one project is
 enough to start; they do not all have to happen at once.
 
+## Unregistered work
+
+Four branches in this repository contain work from other sessions that was never merged
+and is not tracked by any project above. See
+[`UNREGISTERED-WORK.md`](UNREGISTERED-WORK.md). One of them overlaps directly with
+Pizarro Studios OS itself.
+
 ## Starting a new project
 
 Copy `_TEMPLATE/STATE.md`. But first check priority 1 in `CLAUDE.md`: a new project has
