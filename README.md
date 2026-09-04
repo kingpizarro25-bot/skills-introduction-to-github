@@ -1,16 +1,72 @@
-# Introduction to GitHub
+# Pizarro Studios — AI Business Operating System
 
-<img src="https://octodex.github.com/images/Professortocat_v2.png" align="right" height="200px" />
+Version-controlled source of truth for how Pizarro Studios runs: the agents, the
+decisions, the evidence, and the projects.
 
-Hey kingpizarro25-bot!
+## Start here
 
-Mona here. I'm done preparing your exercise. Hope you enjoy! 💚
+Talk to **Mission Control**. It is the front door — it inventories what already
+exists, routes the work to exactly one owning agent, and tracks what is finished,
+blocked, and next.
 
-Remember, it's self-paced so feel free to take a break! ☕️
+```
+Mission Control
+  ├─ Research ────────── finds and verifies the problem
+  ├─ AI Solutions ────── designs the fix
+  ├─ Product Builder ─── scopes version one
+  ├─ Coding ──────────── builds it
+  ├─ Testing ─────────── proves it works
+  ├─ Content ─────────── publishes the proof
+  ├─ Growth ──────────── gets it in front of people
+  ├─ Sales ───────────── sells the deployment
+  └─ Knowledge Vault ─── keeps what was learned
+```
 
-[![](https://img.shields.io/badge/Go%20to%20Exercise-%E2%86%92-1f883d?style=for-the-badge&logo=github&labelColor=197935)](https://github.com/kingpizarro25-bot/skills-introduction-to-github/issues/1)
+Ten agents are active. Thirty more are specified but dormant — they activate on a
+written trigger, not on enthusiasm. See [`agents/README.md`](agents/README.md) for the
+full registry and [`agents/ACTIVATION.md`](agents/ACTIVATION.md) for the rules.
+
+Company context, priorities, approval gates, and working style live in
+[`CLAUDE.md`](CLAUDE.md) — loaded automatically by every agent, so it never has to be
+re-explained.
+
+Project status lives in [`projects/`](projects/README.md). All six projects currently
+read `unknown` because nothing has been verified in this system yet — priority 1 is
+fixing exactly that.
+
+## The two rules that make this work
+
+1. **Nothing is "done" without evidence.** A test report, a screenshot, a link, a
+   number. Agents report *verified / partially verified / not tested / blocked* — never
+   "it works" on faith.
+2. **One owner per unit of work.** Two agents editing the same thing is worse than one
+   agent being busy.
+
+## Layout
+
+| Path | Contents |
+|---|---|
+| `.claude/agents/` | The 10 active agent definitions |
+| `agents/` | Registry, activation rules, dormant specialist specs |
+| `business/research/` | Dated, sourced findings |
+| `business/content/` | Drafted and published pieces |
+| `business/growth/` | Experiments and channel plans |
+| `business/sales/` | Pipeline and proposals |
+| `business/knowledge-vault/` | Decisions, lessons, clients, products, reusable assets, brand |
+| `projects/<name>/` | `STATE.md`, `PRODUCT.md`, `SOLUTION.md`, `EVIDENCE/` |
+| `CLAUDE.md` | Company context, priorities, approval gates, working style |
+
+Start a new project by copying `projects/_TEMPLATE/STATE.md`. That file is the single
+authoritative answer to "where is this project" — if it disagrees with a chat or a
+memory, the file wins.
+
+## Secrets
+
+None, ever, in this repository. Keys, tokens, passwords, and customer data live in
+environment variables or a secret manager. `business/knowledge-vault/` stores decisions
+and lessons, not credentials or personal data.
 
 ---
 
-&copy; 2025 GitHub &bull; [Code of Conduct](https://www.contributor-covenant.org/version/2/1/code_of_conduct/code_of_conduct.md) &bull; [MIT License](https://gh.io/mit)
-
+*This repository began as a GitHub Skills exercise fork; the original tutorial
+workflows remain under `.github/`.*
