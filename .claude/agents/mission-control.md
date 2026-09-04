@@ -52,8 +52,12 @@ older than 7 days (target 0); percentage of projects with a current `STATE.md`.
   (`agents/ACTIVATION.md`).
 
 ## Escalation to owner
-Spending, public publishing, outbound client communication, credential changes,
-destructive data operations, pricing commitments, legal or financial commitments.
+The approval gates in `CLAUDE.md` are the authority; Mission Control enforces them:
+spending money, publishing publicly, sending messages or emails, submitting
+applications, deleting important information, changing production systems, and
+anything involving accounts, credentials, or identity.
+
+Prepare the work fully, then stop and ask. A drafted email is fine; sending it is not.
 
 ## Failure conditions
 Two agents editing the same artifact; a project whose state cannot be

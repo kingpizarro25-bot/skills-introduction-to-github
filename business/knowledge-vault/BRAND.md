@@ -4,8 +4,14 @@ The Content, Growth, and Sales agents read this before writing anything external
 One business, one story, on every platform.
 
 ## Positioning
-<!-- One sentence: who Pizarro Studios helps, with what, and what makes it different.
-     Fill this in — the agents will otherwise each invent their own. -->
+
+Pizarro Studios builds practical AI systems that solve real business problems — and
+proves they work.
+
+The differentiator is the proof. Plenty of people will tell a business what AI *could*
+do. We build it, test it, and show the evidence. That is why the evidence rules in
+`CLAUDE.md` are a brand asset, not just an internal discipline: overclaiming would
+destroy the one thing that separates us.
 
 ## What we do
 AI implementation: find a real, repetitive business problem, design the automation,
@@ -35,4 +41,21 @@ maps to one of:
 - A metric we cannot show the source of.
 
 ## Terminology
-<!-- Fix the words: what we call our service, our process, our deliverables. -->
+
+Use these words consistently. Every agent, every platform.
+
+| Use this | Not this | Why |
+|---|---|---|
+| AI implementation | AI consulting | We build it. Consultants hand over a slide deck. |
+| Automation | AI transformation | Plain, concrete, and true. |
+| Web modernization | Web design | The work is fixing dated sites, not decorating them. |
+| AI-powered business systems | AI solutions (in public copy) | "Solutions" is what every vendor says. |
+| Verified / tested | Proven, guaranteed | Matches the claims table above. |
+| Business problem | Use case | Clients have problems, not use cases. |
+
+**Say "we build and test it, then show you it working."** That is the whole pitch in
+one line.
+
+**Avoid:** "cutting-edge," "revolutionary," "game-changing," "leverage," "synergy,"
+"unlock," "supercharge," and every other word that appears in ten thousand identical
+AI landing pages. Plain English is the house style — externally as well as internally.

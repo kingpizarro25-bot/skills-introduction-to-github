@@ -26,6 +26,14 @@ Ten agents are active. Thirty more are specified but dormant — they activate o
 written trigger, not on enthusiasm. See [`agents/README.md`](agents/README.md) for the
 full registry and [`agents/ACTIVATION.md`](agents/ACTIVATION.md) for the rules.
 
+Company context, priorities, approval gates, and working style live in
+[`CLAUDE.md`](CLAUDE.md) — loaded automatically by every agent, so it never has to be
+re-explained.
+
+Project status lives in [`projects/`](projects/README.md). All six projects currently
+read `unknown` because nothing has been verified in this system yet — priority 1 is
+fixing exactly that.
+
 ## The two rules that make this work
 
 1. **Nothing is "done" without evidence.** A test report, a screenshot, a link, a
@@ -46,6 +54,7 @@ full registry and [`agents/ACTIVATION.md`](agents/ACTIVATION.md) for the rules.
 | `business/sales/` | Pipeline and proposals |
 | `business/knowledge-vault/` | Decisions, lessons, clients, products, reusable assets, brand |
 | `projects/<name>/` | `STATE.md`, `PRODUCT.md`, `SOLUTION.md`, `EVIDENCE/` |
+| `CLAUDE.md` | Company context, priorities, approval gates, working style |
 
 Start a new project by copying `projects/_TEMPLATE/STATE.md`. That file is the single
 authoritative answer to "where is this project" — if it disagrees with a chat or a
