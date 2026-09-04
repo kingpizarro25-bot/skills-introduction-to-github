@@ -1,7 +1,11 @@
-# Pizarro Studios — AI Business Operating System
+# Pizarro Studios OS
 
-Version-controlled source of truth for how Pizarro Studios runs: the agents, the
-decisions, the evidence, and the projects.
+**Pizarro Studios** is the company. **Pizarro Studios OS** is the internal system it
+runs on — the agents, project state, evidence, decisions, lessons, workflows, and
+reusable business knowledge, in one version-controlled place.
+
+This is an internal operating system, not a customer-facing product. Nothing here ships
+to a client.
 
 ## Start here
 
@@ -55,6 +59,7 @@ fixing exactly that.
 | `business/knowledge-vault/` | Decisions, lessons, clients, products, reusable assets, brand |
 | `projects/<name>/` | `STATE.md`, `PRODUCT.md`, `SOLUTION.md`, `EVIDENCE/` |
 | `CLAUDE.md` | Company context, priorities, approval gates, working style |
+| `docs/` | Standards, starting with the Agent Builder |
 
 Start a new project by copying `projects/_TEMPLATE/STATE.md`. That file is the single
 authoritative answer to "where is this project" — if it disagrees with a chat or a
@@ -66,7 +71,8 @@ None, ever, in this repository. Keys, tokens, passwords, and customer data live 
 environment variables or a secret manager. `business/knowledge-vault/` stores decisions
 and lessons, not credentials or personal data.
 
----
+## Adding an agent
 
-*This repository began as a GitHub Skills exercise fork; the original tutorial
-workflows remain under `.github/`.*
+Read [`docs/AGENT_BUILDER.md`](docs/AGENT_BUILDER.md) first. Its opening rule: if an
+existing agent covers 80% of the work, improve that agent instead of creating another
+one. Ten active agents is the target, not a starting point.

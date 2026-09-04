@@ -21,6 +21,9 @@ dormant and a core agent covers it.
 
 ## Activation procedure
 
+Follow `docs/AGENT_BUILDER.md` — it carries the full 15-part definition and the
+80% reuse rule that comes before any of it.
+
 1. Mission Control records which trigger was met, with the evidence.
 2. Write the definition into `.claude/agents/<name>.md` using the standard spec:
    mission, responsibilities, inputs, outputs, KPIs, constraints, escalation,

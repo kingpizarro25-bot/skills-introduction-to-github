@@ -35,3 +35,12 @@
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+# Secrets - never commit. Pizarro Studios OS stores decisions, not credentials.
+.env
+.env.*
+*.pem
+*.key
+credentials.json
+secrets.yml
+secrets.yaml

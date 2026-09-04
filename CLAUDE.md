@@ -1,6 +1,10 @@
-# Pizarro Studios — Operating Context
+# Pizarro Studios OS — Operating Context
 
 Loaded automatically by every agent in this repository. Read before doing anything.
+
+**Pizarro Studios** is the company. **Pizarro Studios OS** (this repository) is the
+internal system that coordinates agents, project state, evidence, decisions, lessons,
+workflows, and reusable business knowledge. It is internal tooling, never a product.
 
 ## The company
 
