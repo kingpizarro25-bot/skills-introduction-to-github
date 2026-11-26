@@ -70,3 +70,15 @@ and lessons, not credentials or personal data.
 
 *This repository began as a GitHub Skills exercise fork; the original tutorial
 workflows remain under `.github/`.*
+
+
+## Portfolio Classification
+
+**Role:** Archived learning / GitHub Skills exercise fork.
+
+A learning repository containing copied Pizarro Studios operating documentation alongside GitHub Skills exercise workflows. It is not the canonical company operating system, public portfolio website, or production Pizarro2.0 runtime.
+
+- **Canonical operating system:** [Pizarro2.0](https://github.com/kingpizarro25-bot/pizarro-multi-ai-orchestrator)
+- **Company and public portfolio:** [Pizarro Studios](https://github.com/kingpizarro25-bot/pizarros-studios-)
+
+Keep this repository in its current role. Do not claim production readiness, verified customer outcomes, or active deployment without current test evidence. Preserve its history; any migration, archival, rename, or deletion requires a separate reviewed decision.
